@@ -33,5 +33,6 @@ def ocr_with_smolvlm(model_name, image_path):
 
     return processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
 
+# запускаем модель
 text = ocr_with_smolvlm("HuggingFaceTB/SmolVLM-256M-Instruct", "Text-eng-old.jpg")
 print(text)
