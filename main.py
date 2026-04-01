@@ -38,7 +38,7 @@ def load_image():
     return None
 
 # Функция распознования
-def transcribe_image(processor, model, device, image: Image.Image) -> str:
+def transcribe_image(processor, model, device, image):
     messages = [
         {
             "role": "user",
@@ -46,7 +46,12 @@ def transcribe_image(processor, model, device, image: Image.Image) -> str:
                 {"type": "image"},
                 {
                     "type": "text",
-                    "text": "Transcribe the text exactly. Do not paraphrase. Keep punctuation, numbers, and line breaks if possible."
+                    "text": (
+                        "Transcribe the text exactly as it appears in the image. "
+                        "Do not paraphrase. "
+                        "Do not add explanations. "
+                        "Output only the recognized text."
+                    )
                 },
             ],
         }
@@ -59,21 +64,24 @@ def transcribe_image(processor, model, device, image: Image.Image) -> str:
     with torch.no_grad():
         generated_ids = model.generate(
             **inputs,
-            max_new_tokens=256,
+            max_new_tokens=128,
             do_sample=False
         )
 
-    generated_text = processor.batch_decode(
-        generated_ids,
-        skip_special_tokens=True
-    )[0]
+    prompt_length = inputs["input_ids"].shape[1]
+    new_tokens = generated_ids[:, prompt_length:]
 
-    return generated_text.strip()
+    generated_text = processor.batch_decode(
+        new_tokens,
+        skip_special_tokens=True
+    )[0].strip()
+
+    return generated_text
 
 
 # Определение заголовков приложения
-st.set_page_config(page_title="Распознать английский текст с изображения!", page_icon="🧠")
-st.title("🧠 Распознать английский текст с изображения!")
+st.set_page_config(page_title="Распознать английский текст с изображения!")
+st.title("🌟 Распознать английский текст с изображения!")
 st.write("Загрузите изображение и нажмите кнопку распознавания.")
 
 
@@ -89,8 +97,7 @@ if st.button("Распознать изображение", type="primary"):
             try:
                 result = transcribe_image(processor, model, device, img)
                 st.success("✅ Распознавание завершено!")
-                st.markdown("**Результат:**")
-                print(result)
-                st.code(result, language="text")
+                st.markdown(f"**Распознанный текст:** {result}")
+                #st.code(result, language="text")
             except Exception as e:
                 st.error(f"Ошибка при распознавании: {e}")
