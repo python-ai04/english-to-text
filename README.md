@@ -1,3 +1,12 @@
 # english-to-text
 
-Заготовка под дальнейшую разработку
+Web-приложение для распознавания текста на английском языке с изображения. 
+
+Используются библиотеки:
+- [Streamlit](https://streamlit.io/)
+- [Transformers]( https://huggingface.co/)
+- [Torchvision](https://pytorch.org/vision/stable/index.html)
+
+Для распознавания изображений используется нейронная сеть [SmolVLM-256M-Instruct](https://huggingface.co/HuggingFaceTB/SmolVLM-256M-Instruct). 
+
+[Ссылка на развернутое приложение](https://english-to-text.streamlit.app/).
