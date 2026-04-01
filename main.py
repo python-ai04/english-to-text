@@ -32,8 +32,10 @@ def load_image():
 
     if uploaded_file is not None:
         image_data = uploaded_file.getvalue()
-        st.image(image_data, caption="Загруженное изображение", use_container_width=True)
-        return Image.open(io.BytesIO(image_data)).convert("RGB")
+        st.image(image_data, caption="Загруженное изображение", width="stretch")
+        image = Image.open(io.BytesIO(image_data)).convert("RGB")
+        image.thumbnail((1024, 1024))
+        return image
 
     return None
 
@@ -64,7 +66,7 @@ def transcribe_image(processor, model, device, image):
     with torch.no_grad():
         generated_ids = model.generate(
             **inputs,
-            max_new_tokens=128,
+            max_new_tokens=64,
             do_sample=False
         )
 
