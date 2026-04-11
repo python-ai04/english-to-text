@@ -3,7 +3,7 @@
 Web-приложение для распознавания текста на английском языке с изображения. 
 
 Используются библиотеки:
-- [Streamlit](https://streamlit.io/)
+- [Gradio](https://www.gradio.app/)
 - [Transformers]( https://huggingface.co/)
 - [Torchvision](https://pytorch.org/vision/stable/index.html)
 
